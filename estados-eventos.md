@@ -231,3 +231,199 @@ function ContadorSeguro() {
 - Evita problemas de concorrência em múltiplas atualizações.
 
 ---
+
+### **#11: Atualizando Objetos em States**  
+📌 **Descrição**:  
+Aprendemos a atualizar objetos dentro de um **State** no React, garantindo que a modificação ocorra corretamente sem mutar o estado diretamente.  
+
+🚀 **Exemplo**:  
+```jsx
+function Usuario() {
+  const [usuario, setUsuario] = useState({ nome: "Alice", idade: 25 });
+
+  function atualizarIdade() {
+    setUsuario((prevUsuario) => ({ ...prevUsuario, idade: prevUsuario.idade + 1 }));
+  }
+
+  return (
+    <div>
+      <p>Nome: {usuario.nome}</p>
+      <p>Idade: {usuario.idade}</p>
+      <button onClick={atualizarIdade}>Aumentar Idade</button>
+    </div>
+  );
+}
+```
+🔎 **Pontos Importantes**:  
+- **Nunca modificar o objeto diretamente** (`usuario.idade += 1` ❌).  
+- Sempre usar **spread operator (`...`)** para manter os outros valores do objeto.  
+
+---
+
+### **Projeto ToDo**  
+📌 **Descrição**:  
+Criamos um **Projeto ToDo** para gerenciar tarefas utilizando um **array no State**.  
+
+🚀 **Estrutura do Projeto**:  
+```bash
+📁 projeto-todo/
+├── 📄 index.js
+├── 📁 src/
+│   ├── 📄 App.js
+│   ├── 📄 TodoList.js
+│   ├── 📄 TodoItem.js
+│   ├── 📄 styles.css
+└── 📄 README.md
+```
+🔎 **Pontos Importantes**:  
+- Cada **tarefa é um objeto** com `id` e `texto`.  
+- Manipulação do **State** para exibir, adicionar, excluir e alterar tarefas.  
+
+---
+
+### **Arrays em States: Exibir**  
+📌 **Descrição**:  
+Renderizamos um **array no State** utilizando `map()`.  
+
+🚀 **Exemplo**:  
+```jsx
+function Lista() {
+  const [itens, setItens] = useState(["Item 1", "Item 2", "Item 3"]);
+
+  return (
+    <ul>
+      {itens.map((item, index) => (
+        <li key={index}>{item}</li>
+      ))}
+    </ul>
+  );
+}
+```
+🔎 **Pontos Importantes**:  
+- **Cada item deve ter uma `key` única**.  
+- `map()` percorre o **array do State** e gera elementos JSX.  
+
+---
+
+### **Arrays em States: Adicionar**  
+📌 **Descrição**:  
+Adicionamos novos itens ao **array do State** utilizando `setState`.  
+
+🚀 **Exemplo**:  
+```jsx
+function Lista() {
+  const [itens, setItens] = useState(["Item 1", "Item 2"]);
+
+  function adicionarItem() {
+    setItens((prevItens) => [...prevItens, `Item ${prevItens.length + 1}`]);
+  }
+
+  return (
+    <div>
+      <ul>
+        {itens.map((item, index) => (
+          <li key={index}>{item}</li>
+        ))}
+      </ul>
+      <button onClick={adicionarItem}>Adicionar Item</button>
+    </div>
+  );
+}
+```
+🔎 **Pontos Importantes**:  
+- **Não modificar o array diretamente** (`push() ❌`).  
+- Criar um **novo array** com os itens antigos + novo item.  
+
+---
+
+### **Arrays em States: Excluir**  
+📌 **Descrição**:  
+Removemos um **item do array** utilizando `filter()`.  
+
+🚀 **Exemplo**:  
+```jsx
+function Lista() {
+  const [itens, setItens] = useState(["Item 1", "Item 2", "Item 3"]);
+
+  function removerItem(index) {
+    setItens((prevItens) => prevItens.filter((_, i) => i !== index));
+  }
+
+  return (
+    <ul>
+      {itens.map((item, index) => (
+        <li key={index}>
+          {item} <button onClick={() => removerItem(index)}>Remover</button>
+        </li>
+      ))}
+    </ul>
+  );
+}
+```
+🔎 **Pontos Importantes**:  
+- `filter()` cria um **novo array** excluindo o item desejado.  
+
+---
+
+### **Arrays em States: Alterar**  
+📌 **Descrição**:  
+Editamos um item dentro do **array do State** utilizando `map()`.  
+
+🚀 **Exemplo**:  
+```jsx
+function Lista() {
+  const [itens, setItens] = useState(["Item 1", "Item 2", "Item 3"]);
+
+  function editarItem(index) {
+    setItens((prevItens) =>
+      prevItens.map((item, i) => (i === index ? `Item ${i + 1} (editado)` : item))
+    );
+  }
+
+  return (
+    <ul>
+      {itens.map((item, index) => (
+        <li key={index}>
+          {item} <button onClick={() => editarItem(index)}>Editar</button>
+        </li>
+      ))}
+    </ul>
+  );
+}
+```
+🔎 **Pontos Importantes**:  
+- `map()` percorre o array e altera apenas o item desejado.  
+
+---
+
+### **Arrays em States: Usando ID**  
+📌 **Descrição**:  
+Usamos **IDs únicos** para gerenciar corretamente os itens da lista.  
+
+🚀 **Exemplo**:  
+```jsx
+function Lista() {
+  const [itens, setItens] = useState([
+    { id: 1, nome: "Item 1" },
+    { id: 2, nome: "Item 2" },
+  ]);
+
+  function removerItem(id) {
+    setItens((prevItens) => prevItens.filter((item) => item.id !== id));
+  }
+
+  return (
+    <ul>
+      {itens.map((item) => (
+        <li key={item.id}>
+          {item.nome} <button onClick={() => removerItem(item.id)}>Remover</button>
+        </li>
+      ))}
+    </ul>
+  );
+}
+```
+🔎 **Pontos Importantes**:  
+- **Evita problemas ao excluir ou alterar itens no array**.  
+
+---
