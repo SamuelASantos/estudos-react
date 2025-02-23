@@ -365,3 +365,124 @@ export default ThemeButton;
 - `useReducer` → Ótimo para gerenciar **estados complexos** com **múltiplas ações**.
 - `dispatch` → Permite disparar ações para modificar o estado.
 - `useReducer + Context` → Ajuda a **compartilhar estado global**.
+
+
+### 📌 O que é **Context** no React?
+O **Context** no React permite compartilhar dados globalmente entre componentes, evitando o "prop drilling" (passar dados manualmente por várias camadas de componentes). 
+
+O `Context API` fornece uma maneira eficiente de:
+- Compartilhar **temas** (ex: dark/light mode)
+- Gerenciar **autenticação**
+- Centralizar informações como **usuário logado**
+
+Ele é composto por:
+1. **`createContext`** - Cria o contexto.
+2. **`Provider`** - Fornece o valor global do contexto.
+3. **`Consumer`** - Consome o valor do contexto.
+
+---
+
+## 🛠️ Criando um **Context**
+
+Exemplo básico de um contexto que gerencia o tema (light/dark):
+
+```javascript
+import { createContext, useState } from "react";
+
+// 1. Criando o contexto
+const ThemeContext = createContext();
+
+export function ThemeProvider({ children }) {
+  const [theme, setTheme] = useState("light");
+
+  const toggleTheme = () => {
+    setTheme(theme === "light" ? "dark" : "light");
+  };
+
+  return (
+    // 2. Provedor do contexto
+    <ThemeContext.Provider value={{ theme, toggleTheme }}>
+      {children}
+    </ThemeContext.Provider>
+  );
+}
+
+export default ThemeContext;
+```
+📌 Aqui, o contexto **ThemeContext** permite alternar entre os temas.
+
+---
+
+## 🔄 Alterando um **Context**
+
+Usamos o **`useContext`** para consumir e alterar o valor global do contexto.
+
+```javascript
+import { useContext } from "react";
+import ThemeContext from "./ThemeContext";
+
+function BotaoTema() {
+  const { theme, toggleTheme } = useContext(ThemeContext);
+
+  return (
+    <button onClick={toggleTheme}>
+      Mudar para {theme === "light" ? "dark" : "light"}
+    </button>
+  );
+}
+
+export default BotaoTema;
+```
+✅ Aqui, `toggleTheme` é chamado para alternar entre os temas.
+
+---
+
+## 🗂️ Organizando um **Context**
+
+Uma estrutura mais organizada para projetos maiores:
+
+```
+📂 src/
+├── 📁 context/
+│   ├── AuthContext.js
+│   ├── ThemeContext.js
+│   └── index.js
+├── 📁 components/
+│   ├── Header.js
+│   └── Footer.js
+└── App.js
+```
+
+**1. Arquivo index.js para centralizar todos os Contexts**
+```javascript
+export { ThemeProvider } from "./ThemeContext";
+export { AuthProvider } from "./AuthContext";
+```
+
+**2. No arquivo principal (App.js)**
+```javascript
+import { ThemeProvider, AuthProvider } from "./context";
+
+function App() {
+  return (
+    <AuthProvider>
+      <ThemeProvider>
+        <div>
+          <h1>Meu App com Context</h1>
+        </div>
+      </ThemeProvider>
+    </AuthProvider>
+  );
+}
+
+export default App;
+```
+
+---
+
+### 🚀 Conclusão
+
+- `createContext()` cria um contexto global.
+- `Provider` fornece valores globais.
+- `useContext()` consome e altera os valores do contexto.
+- Organização adequada facilita a escalabilidade e manutenção.
